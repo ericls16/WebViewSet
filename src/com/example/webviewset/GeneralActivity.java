@@ -85,8 +85,13 @@ public class GeneralActivity extends Activity {
 		webSettings.setDomStorageEnabled(true);
 		//设置的WebView是否应该保存的表单数据。默认值是true。
 		webSettings.setSaveFormData(true);
-		//设置是否WebView中是否支持多个窗口。如果设置为true，onCreateWindow(WebView, boolean, boolean, Message)必须由主机应用程序来实现。默认为false。
-		webSettings.setSupportMultipleWindows(true);
+		/**
+		 * 设置是否WebView中是否支持多个窗口。
+		 * 如果设置为true，onCreateWindow(WebView, boolean, boolean, Message)必须由主机应用程序来实现。
+		 * 默认为false。
+		 * 注意：这里如果设置为true，则网页超链接的文字链接可能无响应。
+		 */
+		webSettings.setSupportMultipleWindows(false);
 		//支持访问文件
 		webSettings.setAllowFileAccess(true);
 		
