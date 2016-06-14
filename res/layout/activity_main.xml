@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.webviewset.MainActivity" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="webview" />
+    
+    <Button 
+        android:id="@+id/btn_wv_general"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="general"/>
+
+</LinearLayout>
