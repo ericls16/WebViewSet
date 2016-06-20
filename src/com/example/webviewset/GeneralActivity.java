@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
+import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -21,6 +22,7 @@ import android.webkit.WebViewClient;
 public class GeneralActivity extends Activity {
 
 	WebView webView;
+	WebSettings webSettings;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class GeneralActivity extends Activity {
 
 	//初始配置webview
 	private void configureWebView() {
-		WebSettings webSettings = webView.getSettings();
+		webSettings = webView.getSettings();
 		//如果访问的页面中有Javascript，则WebView必须设置支持Javascript
 		webSettings.setJavaScriptEnabled(true);
 		//支持通过JS打开新窗口 
@@ -71,8 +73,8 @@ public class GeneralActivity extends Activity {
 			webSettings.setLoadsImagesAutomatically(true); 
 		} else {
 			webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-			//支持自动加载图片
-			webSettings.setLoadsImagesAutomatically(true);
+			//关闭自动加载图片
+			webSettings.setLoadsImagesAutomatically(false);
 		}
 		//设置加载进来的页面自适应手机屏幕(即支持html的meta标签，让html通过meta标签自适应手机屏幕)
 		webSettings.setUseWideViewPort(true);
@@ -104,6 +106,8 @@ public class GeneralActivity extends Activity {
 		webSettings.setAppCachePath(path);
 		//设置缓存的最大字节数
 		webSettings.setAppCacheMaxSize(1024 * 1024 * 8);
+		//提高渲染的优先级
+		webSettings.setRenderPriority(RenderPriority.HIGH);
 		
 		//------------------------------------------------
 		
@@ -119,7 +123,6 @@ public class GeneralActivity extends Activity {
         webView.requestFocusFromTouch();
         
         //------------------------------------------------
-        
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -127,6 +130,15 @@ public class GeneralActivity extends Activity {
             	Log.i("url", ""+url);
                 view.loadUrl(url);
                 return true;
+            }
+            
+            @Override
+            public void onPageFinished(WebView view, String url) {
+            	super.onPageFinished(view, url);
+            	//在页面装入完成后设置加载图片
+            	if(!webSettings.getLoadsImagesAutomatically()) {
+            		webSettings.setLoadsImagesAutomatically(true);
+                }
             }
         });
 		
