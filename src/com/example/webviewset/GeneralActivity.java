@@ -121,6 +121,7 @@ public class GeneralActivity extends Activity {
 		//提高渲染的优先级
 		webSettings.setRenderPriority(RenderPriority.HIGH);
 		
+//		webSettings.setUserAgentString("User-Agent:Android");//设置用户代理，一般不用
 		//------------------------------------------------
 		
 		//指定水平滚动条是否有重叠的风格
