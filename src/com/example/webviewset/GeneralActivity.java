@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
@@ -55,7 +57,7 @@ public class GeneralActivity extends Activity {
 //		webView.loadUrl("file:///data/data/com.example.webviewset/www/about.html");
 		
 		//打开指定URL的html文件
-//		webView.loadUrl("http://baidu.com");
+//		webView.loadUrl("https://www.github.com/");
 	}
 
 	//初始配置webview
@@ -150,6 +152,14 @@ public class GeneralActivity extends Activity {
             		webSettings.setLoadsImagesAutomatically(true);
                 }
             }
+            
+//            @Override
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//            	super.onReceivedSslError(view, handler, error);
+//            	//handler.cancel(); // Android默认的处理方式
+//            	handler.proceed();  // 接受所有网站的证书
+//            	//handleMessage(Message msg); // 进行其他处理
+//            }
         });
         //设置浏览器的处理
         webView.setWebChromeClient(new WebChromeClient(){
