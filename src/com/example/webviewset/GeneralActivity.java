@@ -1,15 +1,20 @@
 package com.example.webviewset;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.RenderPriority;
+import android.webkit.WebStorage.QuotaUpdater;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -100,11 +105,16 @@ public class GeneralActivity extends Activity {
 		//设置应用程序的缓存API可用（使用它需要设置缓存路径setAppCachePath）
 		webSettings.setAppCacheEnabled(true);
 		//优先使用缓存，使用可用的并且没有过期的缓存资源,否则加载网络资源。
-		webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); 
+		//建议缓存策略为，判断是否有网络，有的话，使用LOAD_DEFAULT,无网络时，使用LOAD_CACHE_ELSE_NETWORK
+		if(isNetConnected()){
+			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); 
+		}else{
+			webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); 
+		}
 		//设置缓存路径
-		String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wvcache";
+		String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/appcache";
 		webSettings.setAppCachePath(path);
-		//设置缓存的最大字节数
+		//设置缓存的最大字节数(超过最大字节数时在方法)
 		webSettings.setAppCacheMaxSize(1024 * 1024 * 8);
 		//提高渲染的优先级
 		webSettings.setRenderPriority(RenderPriority.HIGH);
@@ -141,6 +151,15 @@ public class GeneralActivity extends Activity {
                 }
             }
         });
+        //设置浏览器的处理
+        webView.setWebChromeClient(new WebChromeClient(){
+        	@SuppressWarnings("deprecation")
+			@Override
+        	public void onReachedMaxAppCacheSize(long requiredStorage, long quota, QuotaUpdater quotaUpdater) {
+        		//当缓存超过最大字节数时
+        		super.onReachedMaxAppCacheSize(requiredStorage, quota, quotaUpdater);
+        	}
+        });
 		
 	}
 	
@@ -153,5 +172,18 @@ public class GeneralActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
+	
+	/**
+	 * 判断是否联网；
+	 * @param context
+	 */
+	public boolean isNetConnected(){
+		ConnectivityManager cm=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni=cm.getActiveNetworkInfo();
+		if(ni==null){ //判断网络是否存在；
+			return false;
+		}
+		return ni.isConnected();//返回是否联网；
+	}
 
 }
